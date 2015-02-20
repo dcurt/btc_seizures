@@ -1,3 +1,6 @@
+var dotenv = require('dotenv');
+dotenv.load();
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');    // Do I need this?
@@ -9,16 +12,16 @@ var Dropbox = require("dropbox");
 var Twit = require('twit');
 
 var T = new Twit({
-    consumer_key:         'IH0edpizzsaxO3hM1gxi2Idq2'                              //DO SOMETHING ABOUT THESE TO HIDE THEM? AND DO I NEED BOTH?
-  , consumer_secret:      'ypdG2XKViolJKJh9T9Ii9U9xwmzpcwOFuS3XS0DRUN90DradK4'
-  , access_token:         '2997873525-yBKfXRGsUQkyFiq0diHETCb45kngqoTxCV1LvaL'
-  , access_token_secret:  'stzho6P3mzb8IgSgMVAxKhFX4gCV1HEhdWWPXW3RMqQQn'
+    consumer_key:         process.env.TWITTER_CONSUMER_KEY                              
+  , consumer_secret:      process.env.TWITTER_CONSUMER_SECRET
+  , access_token:         process.env.TWITTER_TOKEN
+  , access_token_secret:  process.env.TWITTER_TOKEN_SECRET
 });
 
 var client = new Dropbox.Client({
-    key: "x03c5bkajjm7oxe",
-    secret: "ms7v825o9hag938",
-    token:"LSD2Mn0o_LkAAAAAAAABMgorFxfHb1cPkbUrYfssySPQyrA7KKO4vPxuNOyL9q5_", //got from implicit grant
+    key: process.env.DROPBOX_KEY,
+    secret: process.env.DROPBOX_SECRET,
+    token: process.env.DROPBOX_TOKEN   //got from implicit grant
 });
 
 client.onError.addListener(function(error) {
@@ -65,6 +68,7 @@ start();
 
 
 function start() {
+    
     console.log(getDate().fullDateTime + ":   Checking www.forfeiture.gov every 24 hours, starting now.");
     cycleAgencies();
     setInterval(cycleAgencies, 60000);
